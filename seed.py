@@ -75,7 +75,7 @@ def main():
             library_card = faker.unique.numerify(text='##########'),
             username = faker.unique.user_name(),
             password = random_passhash(),
-            reader_id = random.randint(last_reader.id - USERS_COUNT + 1, last_reader.id),
+            reader_id = last_reader.id - USERS_COUNT + 1 + _ ,
         )
         """last_reader = Reader(
             library_card = last_profile.library_card

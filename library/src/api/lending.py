@@ -12,11 +12,11 @@ def checkout():
             abort(400)
 
     
-    li_book = LibraryBooks.query.get_or_404(library_id=request.json["library_id"], book_id=request.id["book_id"])
+    li_book = LibraryBooks.query.get_or_404((request.json["library_id"],request.json["book_id"]))
     if li_book.available_copies > 0:
         new_check_out = ReadersBooks(
             reader_id = request.json['reader'],
-            book_id = request.json['book.id'],
+            book_id = request.json['book_id'],
             library_id = request.json['library_id']
         )
         db.session.add(new_check_out)
@@ -44,8 +44,8 @@ def checkin():
         if req not in request.json:
             abort(400)
 
-    checked_book = ReadersBooks.query.get_or_404(reader_id=request.json['reader'], book_id=request.json['book_id'])
-    lib_book = LibraryBooks.query.get_or_404(book_id=request.json['book_id'], library_id=checked_book.library_id)
+    checked_book = ReadersBooks.query.get_or_404((request.json['reader'], request.json['book_id']))
+    lib_book = LibraryBooks.query.get_or_404((checked_book.library_id, request.json['book_id']))
 
     try:
         db.session.delete(checked_book)

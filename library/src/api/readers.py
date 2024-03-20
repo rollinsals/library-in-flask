@@ -22,8 +22,7 @@ def index():
 @bp.route('<int:id>', methods=['GET'])
 def show(id: int):
     reader = Reader.query.get_or_404(id, "User not found")
-    acct = Profile.query.get(reader.library_card)
-    return jsonify(acct.serialize())
+    return jsonify(reader.serialize())
 
 @bp.route('/<int:id>/reviews', methods=['GET'])
 def show_reviews(id: int):
@@ -38,7 +37,7 @@ def show_loans(id: int):
     reader = Reader.query.get_or_404(id, "Account not found")
     result = []
     for b in reader.books_checked_out:
-        result.append(b.serialize())
+        result.append(b.book.serialize())
     return jsonify(result)
 
 

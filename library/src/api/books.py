@@ -39,9 +39,9 @@ def create():
     b = Book(
         title=request.json["title"],
         genre=new_genre,
-        format=new_format,
-        publish_year=new_pub,
-        author=request.json["author_id"]
+        book_format=new_format,
+        published_year=new_pub,
+        author_id=request.json["author_id"]
     )
     db.session.add(b)
     db.session.commit()
@@ -61,8 +61,8 @@ def delete(id: index):
 def show_libraries_available(id: int):
     b = Book.query.get_or_404(id, "Book not found")
     results = []
-    for l in b.libraries_available:
-        results.append(l.serialize())
+    for l in b.libraries:
+        results.append(l.library.serialize())
     return jsonify(results)
 # list reviews of the book
 @bp.route('<int:id>/reviews', methods=['GET'])

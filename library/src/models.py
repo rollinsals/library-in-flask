@@ -60,7 +60,7 @@ class Book(db.Model):
     title: Mapped[str]
     genre: Mapped[Optional[str]]
     book_format: Mapped[str]
-    published_year: Mapped[int]
+    published_year: Mapped[Optional[int]]
 
     author_id = mapped_column(ForeignKey("author.id"))
     author: Mapped["Author"] = relationship(back_populates="books_written")
@@ -149,7 +149,7 @@ class Review(db.Model):
     __tablename__ = "review"
 
     id: Mapped[int] =  mapped_column(primary_key=True)
-    rating: Mapped[Optional[str]]
+    rating: Mapped[Optional[int]]
     review_body: Mapped[Optional[str]]
 
     reviewer_id = mapped_column(ForeignKey("reader.id"))
