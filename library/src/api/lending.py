@@ -54,7 +54,4 @@ def checkin():
         return jsonify(True)
     except:
         return jsonify(False)
-    # get the reader-book object
-    # get the library-book object
-    # delete the reader-book connection
-    # add 1 to the library-book for available copies
+    

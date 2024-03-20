@@ -48,8 +48,9 @@ def create_user():
 
     new_user = Profile(
         username= request.json['username'],
-        password= request.json['password']
+        password= request.json['password'], 
     )
+    new_user.generate_lib_num()
     new_reader = Reader(
         profile= new_user
     )

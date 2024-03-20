@@ -11,8 +11,7 @@ API
 | GET | Show | Returns the user's info | ~/user/<id> | - |
 | GET | Show Reviews | Returns the reviews created by the user | ~/user/<id>/reviews | - |
 | GET | Show Loans | Returns the books currently lent to the user | ~/user/<id>/loans | - |
-| POST | Check Out Book | Adds association between the reader and input book | ~/user | book_id, user_id |
-| DELETE | Return Book | Removes book from the reader's list | ~/user/<id>/loans | book_id |
+
 
 ## Library
 | Method | Name | Description | Path | Parameters |
@@ -43,3 +42,8 @@ API
 | PUT | Update | Modifies review text, rating, or both | ~/reviews/<id> | **reader_id**, **book_id**, review_body, rating |
 | DELETE | Delete | Removes a user's review | ~/reviews/<id> | - |
 
+## Checkin/Checkout
+| Method | Name | Description | Path | Parameters |
+| ------ | ---- | ----------- | ---- | ---------- |
+| POST | Check Out Book | Adds association between the reader and input book | ~/lending | user_id, book_id, library_id |
+| DELETE | Return Book | Removes book from the reader's list | ~/lending | book_id, user_id |

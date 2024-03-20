@@ -6,10 +6,11 @@ See schema at -filename-
 Rollin Salsbery
 3/8/2024
 """
+import string
 from datetime import date, timedelta
 from flask_sqlalchemy import SQLAlchemy
 
-from sqlalchemy import ForeignKey, String, Date
+from sqlalchemy import ForeignKey, String, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 #from sqlalchemy.ext.associationproxy import AssociationProxy, association_proxy
 from typing import List, Optional
@@ -68,6 +69,9 @@ class Book(db.Model):
     readers: Mapped[List["ReadersBooks"]] = relationship(back_populates='book')
     reviews: Mapped[List["Review"]] = relationship(back_populates="book")
 
+    def __str__(self):
+        return f"Book: {self.title}"
+
     def serialize(self):
         return {
             'id': self.id,
@@ -90,6 +94,9 @@ class Author(db.Model):
 
     books_written: Mapped[Book] = relationship(back_populates="author")
 
+    def __str__(self):
+        return f"Author: {self.name}"
+
     def serialize(self):
         return {
             'name': self.name,
@@ -106,6 +113,9 @@ class Library(db.Model):
 
     book_inventory: Mapped[List["LibraryBooks"]] = relationship(back_populates="library")
 
+    def __str__(self):
+        return f"Library branch {self.branch_name}"
+
     def serialize(self):
         return {
             'branch name': self.branch_name,
@@ -120,17 +130,28 @@ class Profile(db.Model):
     __tablename__ = "profile"
     
     id: Mapped[int] = mapped_column(primary_key=True)
-    library_card: Mapped[str] = mapped_column(String(15))
+    library_card: Mapped[str] = mapped_column(String(15), unique=True)
     username: Mapped[str]
     password: Mapped[str]
 
     reader_id: Mapped[int] = mapped_column(ForeignKey("reader.id"))
-    reader: Mapped["Reader"] = relationship(back_populates="profile")
+    reader: Mapped["Reader"] = relationship(back_populates="profile", single_parent=True)
 
+    __table_args__ = (UniqueConstraint(reader_id))
+
+    def generate_lib_num(self):
+        if not self.id:
+            self.library_card = ''.join(string.digits, 15) 
+
+    def __str__(self):
+        return "User: ", self.username
 
   
 
 class Reader(db.Model):
+    """
+    Intermediate model for User Profile. All other models relate through the Reader. 1-to-1
+    """
     __tablename__ = "reader"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -145,6 +166,7 @@ class Reader(db.Model):
         }
 
 
+
 class Review(db.Model):
     __tablename__ = "review"
 
@@ -157,6 +179,9 @@ class Review(db.Model):
 
     book_id = mapped_column(ForeignKey("book.id"))
     book: Mapped[Book] = relationship(back_populates="reviews")
+
+    def __str__(self):
+        return f"Review of {self.book.title} by {self.reviewer.profile.username}"
 
     def serialize(self):
         return {
