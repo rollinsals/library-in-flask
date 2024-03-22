@@ -4,12 +4,19 @@ User Profile Management
 Rollin Salsbery
 """
 
+import secrets
+import hashlib
 from flask import Blueprint, jsonify, abort, request
 from ..models import Reader, Profile, db
 
 
 
 bp = Blueprint('readers', __name__, url_prefix='/user')
+
+def scramble(password:str):
+    salt = secrets.token_hex(16)
+    return hashlib.sha512((password + salt).encode('utf-8')).hexdigest()
+
 
 @bp.route('', methods=['GET'])
 def index():
@@ -48,7 +55,7 @@ def create_user():
 
     new_user = Profile(
         username= request.json['username'],
-        password= request.json['password'], 
+        password= scramble(request.json['password']),
     )
     new_user.generate_lib_num()
     new_reader = Reader(
@@ -70,7 +77,7 @@ def update_user():
         user.profile.username = request.json['username']
 
     if 'password' in request.json:
-        user.profile.password = request.json['password']
+        user.profile.password = scramble(request.json['password'])
 
     try:
         db.session.commit()

@@ -25,7 +25,6 @@ def show(id: int):
     return jsonify(branch.serialize())
 
 # show the books associated with this library
-# not sure how to access the copies columns in the intermediate table
 @bp.route('/<int:id>/book_inventory', methods=['GET'])
 def list_books(id: int):
     branch = Library.query.get_or_404(id, "Branch not found")

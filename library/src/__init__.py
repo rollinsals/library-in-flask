@@ -33,10 +33,11 @@ def create_app(test_config=None):
         db.create_all()
     migrate = Migrate(app, db)
 
-    from .api import readers, books, libraries, reviews, lending
+    from .api import readers, books, libraries, reviews, lending, authors
     app.register_blueprint(readers.bp)
     app.register_blueprint(books.bp)
     app.register_blueprint(libraries.bp)
+    app.register_blueprint(authors.bp)
     app.register_blueprint(reviews.bp)
     app.register_blueprint(lending.bp)
 

@@ -128,7 +128,7 @@ class Profile(db.Model):
     Profile should not be accessed directly thru API. Reader is 1-to-1 proxy
     """
     __tablename__ = "profile"
-    
+
     id: Mapped[int] = mapped_column(primary_key=True)
     library_card: Mapped[str] = mapped_column(String(15), unique=True)
     username: Mapped[str]
@@ -141,12 +141,12 @@ class Profile(db.Model):
 
     def generate_lib_num(self):
         if not self.id:
-            self.library_card = ''.join(string.digits, 15) 
+            self.library_card = ''.join(string.digits, 15)
 
     def __str__(self):
         return "User: ", self.username
 
-  
+
 
 class Reader(db.Model):
     """
@@ -158,7 +158,7 @@ class Reader(db.Model):
     profile: Mapped["Profile"] = relationship(back_populates="reader")
     reviews: Mapped[List["Review"]] = relationship(back_populates="reviewer")
     books_checked_out: Mapped[List["ReadersBooks"]] = relationship(back_populates="reader")
-    
+
 
     def serialize(self):
         return {
